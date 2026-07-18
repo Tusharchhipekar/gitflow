@@ -4,6 +4,7 @@
         "gitflow",
         "healthcheck",
         "isready",
+        "moddleware",
         "regens",
         "upserted",
         "vercel",

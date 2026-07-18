@@ -192,3 +192,38 @@ export const logoutController = async (req: Request, res: Response) => {
       .json({ message: "Something went wrong. Please try again later." });
   }
 };
+
+export const meController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.userId;
+
+    if (!userId) {
+      res.status(401).json({ message: "Not authenticated" });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Me controller error:", error);
+    res
+      .status(500)
+      .json({ message: "Something went wrong. Please try again later." });
+  }
+};
