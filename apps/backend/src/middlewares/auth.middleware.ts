@@ -29,7 +29,10 @@ export const authMiddleware = (
 
     let payload: AccessTokenPayload;
     try {
-      payload = jwt.verify(token, config.JWT_SECRET) as AccessTokenPayload;
+      payload = jwt.verify(
+        token,
+        config.JWT_ACCESS_SECRET,
+      ) as AccessTokenPayload;
     } catch {
       res.status(401).json({ message: "Invalid or expired access token" });
       return;

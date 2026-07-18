@@ -151,7 +151,7 @@ export const refreshController = async (req: Request, res: Response) => {
 
     let payload: { id: string; type: string };
     try {
-      payload = jwt.verify(token, config.JWT_SECRET) as {
+      payload = jwt.verify(token, config.JWT_REFRESH_SECRET) as {
         id: string;
         type: string;
       };

@@ -5,8 +5,12 @@ if (!process.env.PORT) {
   throw new Error("PORT is not defined");
 }
 
-if (!process.env.JWT_SECRET) {
-  throw new Error("JWT_SECRET is not defined");
+if (!process.env.JWT_ACCESS_SECRET) {
+  throw new Error("JWT_ACCESS_SECRET is not defined");
+}
+
+if (!process.env.JWT_REFRESH_SECRET) {
+  throw new Error("JWT_REFRESH_SECRET is not defined");
 }
 
 if (!process.env.DATABASE_URL) {
@@ -39,7 +43,8 @@ if (!process.env.FRONTEND_URL) {
 
 export const config = {
   PORT: process.env.PORT,
-  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   DATABASE_URL: process.env.DATABASE_URL,
   EMAIL_USER: process.env.EMAIL_USER,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
