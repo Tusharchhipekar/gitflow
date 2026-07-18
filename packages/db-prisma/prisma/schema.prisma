@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String?
+  createdAt DateTime @default(now())
+
+  repos    Repo[]
+  messages Message[]
+}
+
+model Repo {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  owner       String
+  name        String
+  description String?
+  sha         String
+  fileCount   Int
+  truncated   Boolean  @default(false)
+  indexedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  sections Section[]
+
+  @@unique([userId, owner, name])
+}
+
+model Section {
+  id     Int    @id @default(autoincrement())
+  repo   Repo   @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  repoId Int
+  title  String
+  order  Int
+
+  pages Page[]
+
+  @@index([repoId])
+}
+
+model Page {
+  id          Int     @id @default(autoincrement())
+  section     Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId   Int
+  slug        String
+  title       String
+  order       Int
+  markdown    String
+  sourceFiles String
+
+  messages Message[]
+
+  @@unique([sectionId, slug])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  role      Role
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([pageId])
+  @@index([userId])
+}
+
+enum Role {
+  user
+  assistant
+}
