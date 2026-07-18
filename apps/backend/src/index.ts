@@ -5,7 +5,7 @@ import morgan from "morgan";
 import { config } from "./config/config";
 import AuthRouter from "./routes/auth.route";
 
-const app = express();
+export const app = express();
 
 app.use(morgan("dev"));
 app.use(express.json());
