@@ -18,12 +18,6 @@ app.get("/", (_req, res) => {
 
 app.use("/api/v1/auth", AuthRouter);
 
-console.log("PORT VALUE:", JSON.stringify(config.PORT), typeof config.PORT);
-
-const server = app.listen(config.PORT, () => {
+app.listen(config.PORT, () => {
   console.log(`Server is running on port http://localhost:${config.PORT}`);
-});
-
-server.on("error", (err) => {
-  console.error("LISTEN ERROR:", err);
 });
