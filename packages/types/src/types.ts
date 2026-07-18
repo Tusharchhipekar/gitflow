@@ -8,11 +8,10 @@ export const SignupInputSchema = z.object({
 
 export const SigninInputSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(1).optional(),
+  password: z.string().min(1),
 });
 
 export const AuthResponseSchema = z.object({
-  token: z.string(),
   user: z.object({
     id: z.number().int(),
     email: z.string().email(),
