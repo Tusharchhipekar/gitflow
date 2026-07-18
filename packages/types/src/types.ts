@@ -1,10 +1,19 @@
 import z from "zod";
 
-export const SignupInputSchema = z.object({
-  email: z.string().email(),
-  name: z.string().min(1),
-  password: z.string().min(1).optional(),
-});
+export const SignupInputSchema = z.discriminatedUnion("provider", [
+  z.object({
+    provider: z.literal("credentials"),
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string().min(1),
+  }),
+  z.object({
+    provider: z.literal("google"),
+    name: z.string(),
+    email: z.string().email(),
+    googleId: z.string(),
+  }),
+]);
 
 export const SigninInputSchema = z.object({
   email: z.string().email(),
