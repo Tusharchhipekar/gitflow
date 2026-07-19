@@ -17,6 +17,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@repo/git-indexing": "workspace:*",
     "@repo/db-prisma": "workspace:*",
     "@repo/types": "workspace:*",
     "@types/cookie-parser": "^1.4.10",

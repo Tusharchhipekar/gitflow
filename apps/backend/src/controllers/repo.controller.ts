@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { Prisma } from "@repo/db-prisma";
 import prisma from "@repo/db-prisma";
 import { RepoInputSchema, ListReposQuerySchema } from "@repo/types";
+import { startIndexing } from "@repo/git-indexing/pipeline";
 
 export const createRepoController = async (req: Request, res: Response) => {
   const result = RepoInputSchema.safeParse(req.body);
@@ -24,9 +25,13 @@ export const createRepoController = async (req: Request, res: Response) => {
         sha: "pending",
         fileCount: 0,
         truncated: false,
+        status: "pending",
       },
     });
 
+    startIndexing(Number(userId), repo.id, owner, name).catch((err) => {
+      console.error("Background indexing error:", err);
+    });
     return res.status(201).json(repo);
   } catch (error) {
     if (

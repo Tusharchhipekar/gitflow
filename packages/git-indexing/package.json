@@ -1,0 +1,19 @@
+{
+  "name": "@repo/git-indexing",
+  "module": "src/github-fetch.ts",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/github-fetch.ts",
+    "./pipeline": "./src/pipeline.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "@repo/db-prisma": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
