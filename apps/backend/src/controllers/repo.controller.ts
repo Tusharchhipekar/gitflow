@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { Prisma } from "@repo/db-prisma";
 import prisma from "@repo/db-prisma";
 import { RepoInputSchema, ListReposQuerySchema } from "@repo/types";
-import { startIndexing } from "@repo/git-indexing/pipeline";
+import { startIndexing } from "@repo/git-indexing";
 
 export const createRepoController = async (req: Request, res: Response) => {
   const result = RepoInputSchema.safeParse(req.body);

@@ -3,12 +3,12 @@ import { config } from "../config/config";
 
 export const generateAccessToken = (userId: string) => {
   return jwt.sign({ id: userId, type: "access" }, config.JWT_ACCESS_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "7d",
   });
 };
 
 export const generateRefreshToken = (userId: string) => {
   return jwt.sign({ id: userId, type: "refresh" }, config.JWT_REFRESH_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "30d",
   });
 };

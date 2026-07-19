@@ -1,11 +1,10 @@
 {
   "name": "@repo/git-indexing",
-  "module": "src/github-fetch.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "exports": {
-    ".": "./src/github-fetch.ts",
-    "./pipeline": "./src/pipeline.ts"
+    ".": "./src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
