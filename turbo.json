@@ -12,7 +12,18 @@
     },
     "check-types": {
       "dependsOn": ["^check-types"],
-      "env": ["PORT", "JWT_SECRET", "DATABASE_URL"]
+      "env": [
+        "PORT",
+        "JWT_SECRET",
+        "DATABASE_URL",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REFRESH_TOKEN",
+        "EMAIL_USER",
+        "FRONTEND_URL",
+        "LLM_PROVIDER",
+        "MISTRAL_API_KEY"
+      ]
     },
     "dev": {
       "cache": false,

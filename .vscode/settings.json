@@ -4,6 +4,8 @@
         "gitflow",
         "healthcheck",
         "isready",
+        "langchain",
+        "mistralai",
         "moddleware",
         "oklch",
         "regens",

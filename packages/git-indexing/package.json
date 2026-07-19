@@ -10,7 +10,11 @@
     "@types/bun": "latest"
   },
   "dependencies": {
-    "@repo/db-prisma": "workspace:*"
+    "@langchain/core": "^1.2.3",
+    "@langchain/mistralai": "^1.2.0",
+    "@repo/db-prisma": "workspace:*",
+    "dotenv": "^17.4.2",
+    "zod": "^4.4.3"
   },
   "peerDependencies": {
     "typescript": "^5"

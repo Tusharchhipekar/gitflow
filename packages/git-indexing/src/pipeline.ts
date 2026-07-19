@@ -1,7 +1,12 @@
 import prisma from "@repo/db-prisma";
 import { fetchRepoTree } from "./github-fetch";
+import { planRepo } from "./agent/planing.model";
+import { generateRepo } from "./agent/generating.model";
 
-const indexingUsers = new Set<number>();
+// Exported so the API layer (repo.controller.ts) can check it *before*
+// creating a repo row, rejecting the request cleanly instead of letting
+// a repo get stuck in "pending" with no indexing job ever picking it up.
+export const indexingUsers = new Set<number>();
 
 export async function startIndexing(
   userId: number,
@@ -9,9 +14,6 @@ export async function startIndexing(
   owner: string,
   name: string,
 ) {
-  if (indexingUsers.has(userId)) {
-    throw new Error("You already have an indexing job in progress");
-  }
   indexingUsers.add(userId);
 
   try {
@@ -30,11 +32,13 @@ export async function startIndexing(
         fileCount: result.fileCount,
         truncated: result.truncated,
         indexedAt: new Date(),
-        status: "planning", // next step — TOC generation — picks up from here
+        status: "planning",
       },
     });
 
-    // TODO: hand result.files off to the Claude TOC planning step
+    await planRepo(repoId, result.files); // writes Sections/Pages, sets status: "generating"
+
+    await generateRepo(repoId); // writes markdown + diagrams per page, sets status: "ready"
   } catch (err) {
     console.error(`Indexing failed for repo ${repoId}:`, err);
     await prisma.repo.update({

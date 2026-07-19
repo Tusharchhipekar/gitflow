@@ -1,2 +1,2 @@
 export { fetchRepoTree } from "./github-fetch";
-export { startIndexing } from "./pipeline";
+export { startIndexing, indexingUsers } from "./pipeline";

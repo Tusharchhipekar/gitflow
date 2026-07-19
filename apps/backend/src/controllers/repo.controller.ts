@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { Prisma } from "@repo/db-prisma";
 import prisma from "@repo/db-prisma";
 import { RepoInputSchema, ListReposQuerySchema } from "@repo/types";
-import { startIndexing } from "@repo/git-indexing";
+import { startIndexing, indexingUsers } from "@repo/git-indexing";
 
 export const createRepoController = async (req: Request, res: Response) => {
   const result = RepoInputSchema.safeParse(req.body);
@@ -14,6 +14,13 @@ export const createRepoController = async (req: Request, res: Response) => {
   const userId = req.userId;
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  if (indexingUsers.has(Number(userId))) {
+    return res.status(409).json({
+      error:
+        "You already have an indexing job in progress. Please wait for it to finish.",
+    });
   }
 
   try {
