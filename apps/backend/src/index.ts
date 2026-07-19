@@ -9,6 +9,7 @@ import {
 } from "passport-google-oauth20";
 import { config } from "./config/config";
 import AuthRouter from "./routes/auth.route";
+import { repoRouter } from "./routes/repo.route";
 
 export const app = express();
 
@@ -49,6 +50,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/auth", AuthRouter);
+app.use("/api/v1/repo", repoRouter);
 
 app.listen(config.PORT, () => {
   console.log(`Server is running on port http://localhost:${config.PORT}`);
