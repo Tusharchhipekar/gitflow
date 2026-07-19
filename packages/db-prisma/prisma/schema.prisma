@@ -25,17 +25,18 @@ model User {
 }
 
 model Repo {
-  id          Int      @id @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          Int         @id @default(autoincrement())
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   owner       String
   name        String
   description String?
   sha         String
   fileCount   Int
-  truncated   Boolean  @default(false)
-  indexedAt   DateTime @default(now())
-  createdAt   DateTime @default(now())
+  status      IndexStatus @default(pending)
+  truncated   Boolean     @default(false)
+  indexedAt   DateTime    @default(now())
+  createdAt   DateTime    @default(now())
 
   sections Section[]
 
@@ -86,4 +87,13 @@ model Message {
 enum Role {
   user
   assistant
+}
+
+enum IndexStatus {
+  pending
+  fetching
+  planning
+  generating
+  ready
+  failed
 }
