@@ -17,8 +17,10 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@repo/git-indexing": "workspace:*",
+    "@langchain/core": "^1.2.3",
+    "@langchain/mistralai": "^1.2.0",
     "@repo/db-prisma": "workspace:*",
+    "@repo/git-indexing": "workspace:*",
     "@repo/types": "workspace:*",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",

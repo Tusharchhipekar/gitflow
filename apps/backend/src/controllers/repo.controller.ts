@@ -66,14 +66,19 @@ export const listReposController = async (req: Request, res: Response) => {
   }
   const { page, limit } = result.data;
 
-  const repos = await prisma.repo.findMany({
-    where: { userId: Number(userId) },
-    orderBy: { createdAt: "desc" },
-    skip: (page - 1) * limit,
-    take: limit,
-  });
+  try {
+    const repos = await prisma.repo.findMany({
+      where: { userId: Number(userId) },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
 
-  return res.json(repos);
+    return res.json(repos);
+  } catch (error) {
+    console.error("Error listing repos:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 export const getRepoController = async (req: Request, res: Response) => {
@@ -87,15 +92,20 @@ export const getRepoController = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Invalid repo id" });
   }
 
-  const repo = await prisma.repo.findFirst({
-    where: { id, userId: Number(userId) },
-  });
+  try {
+    const repo = await prisma.repo.findFirst({
+      where: { id, userId: Number(userId) },
+    });
 
-  if (!repo) {
-    return res.status(404).json({ error: "Repo not found" });
+    if (!repo) {
+      return res.status(404).json({ error: "Repo not found" });
+    }
+
+    return res.json(repo);
+  } catch (error) {
+    console.error("Error fetching repo:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-
-  return res.json(repo);
 };
 
 export const deleteRepoController = async (req: Request, res: Response) => {
@@ -109,14 +119,19 @@ export const deleteRepoController = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Invalid repo id" });
   }
 
-  const repo = await prisma.repo.findFirst({
-    where: { id, userId: Number(userId) },
-  });
+  try {
+    const repo = await prisma.repo.findFirst({
+      where: { id, userId: Number(userId) },
+    });
 
-  if (!repo) {
-    return res.status(404).json({ error: "Repo not found" });
+    if (!repo) {
+      return res.status(404).json({ error: "Repo not found" });
+    }
+
+    await prisma.repo.delete({ where: { id } });
+    return res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting repo:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-
-  await prisma.repo.delete({ where: { id } });
-  return res.status(204).send();
 };

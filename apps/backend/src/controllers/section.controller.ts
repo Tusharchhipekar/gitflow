@@ -18,56 +18,61 @@ export const getRepoSectionsController = async (
     return res.status(400).json({ error: "Invalid repo id" });
   }
 
-  // Ownership check first — never expose another user's repo content
-  const repo = await prisma.repo.findFirst({
-    where: { id, userId: Number(userId) },
-  });
+  try {
+    // Ownership check first — never expose another user's repo content
+    const repo = await prisma.repo.findFirst({
+      where: { id, userId: Number(userId) },
+    });
 
-  if (!repo) {
-    return res.status(404).json({ error: "Repo not found" });
-  }
+    if (!repo) {
+      return res.status(404).json({ error: "Repo not found" });
+    }
 
-  const sections = await prisma.section.findMany({
-    where: { repoId: id },
-    orderBy: { order: "asc" },
-    include: {
-      pages: {
-        orderBy: { order: "asc" },
+    const sections = await prisma.section.findMany({
+      where: { repoId: id },
+      orderBy: { order: "asc" },
+      include: {
+        pages: {
+          orderBy: { order: "asc" },
+        },
       },
-    },
-  });
+    });
 
-  // sourceFiles is stored as a JSON string (per schema) — parse it back into
-  // an array for the response so consumers don't have to JSON.parse it themselves.
-  const formatted = sections.map((section) => ({
-    id: section.id,
-    title: section.title,
-    order: section.order,
-    pages: section.pages.map((page) => {
-      let sourceFiles: string[] = [];
-      try {
-        sourceFiles = JSON.parse(page.sourceFiles);
-      } catch {
-        sourceFiles = [];
-      }
-      return {
-        id: page.id,
-        slug: page.slug,
-        title: page.title,
-        order: page.order,
-        markdown: page.markdown,
-        sourceFiles,
-      };
-    }),
-  }));
+    // sourceFiles is stored as a JSON string (per schema) — parse it back into
+    // an array for the response so consumers don't have to JSON.parse it themselves.
+    const formatted = sections.map((section) => ({
+      id: section.id,
+      title: section.title,
+      order: section.order,
+      pages: section.pages.map((page) => {
+        let sourceFiles: string[] = [];
+        try {
+          sourceFiles = JSON.parse(page.sourceFiles);
+        } catch {
+          sourceFiles = [];
+        }
+        return {
+          id: page.id,
+          slug: page.slug,
+          title: page.title,
+          order: page.order,
+          markdown: page.markdown,
+          sourceFiles,
+        };
+      }),
+    }));
 
-  return res.json({
-    repo: {
-      id: repo.id,
-      owner: repo.owner,
-      name: repo.name,
-      status: repo.status,
-    },
-    sections: formatted,
-  });
+    return res.json({
+      repo: {
+        id: repo.id,
+        owner: repo.owner,
+        name: repo.name,
+        status: repo.status,
+      },
+      sections: formatted,
+    });
+  } catch (error) {
+    console.error(`Error fetching sections for repo ${id}:`, error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };

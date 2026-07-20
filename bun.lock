@@ -14,6 +14,8 @@
       "name": "@repo/backend",
       "version": "1.0.0",
       "dependencies": {
+        "@langchain/core": "^1.2.3",
+        "@langchain/mistralai": "^1.2.0",
         "@repo/db-prisma": "workspace:*",
         "@repo/git-indexing": "workspace:*",
         "@repo/types": "workspace:*",
