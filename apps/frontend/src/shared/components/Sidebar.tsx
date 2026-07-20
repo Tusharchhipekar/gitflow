@@ -16,7 +16,7 @@ export function Sidebar() {
   
 
   return (
-    <nav className="flex h-full w-72 flex-shrink-0 flex-col border-r border-outline-variant bg-surface">
+    <nav className="flex h-full w-72 shrink-0 flex-col border-r border-outline-variant bg-surface">
       <div className="flex items-center gap-4 px-6 py-8">
         <div className="flex h-10 w-10 items-center justify-center rounded border border-outline-variant bg-surface-container-high text-on-surface">
           <Network size={20} />
@@ -26,7 +26,7 @@ export function Sidebar() {
         </h1>
       </div>
 
-      <div className="mt-4 flex flex-grow flex-col gap-2 px-4">
+      <div className="mt-4 flex grow flex-col gap-2 px-4">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = pathname.startsWith(href);
           return (
@@ -52,7 +52,7 @@ export function Sidebar() {
           
           className="flex w-full items-center gap-3 rounded border border-outline-variant bg-surface-container-highest p-3 text-left transition-colors hover:bg-surface-bright"
         >
-          <div className="h-10 w-10 flex-shrink-0 rounded border border-outline-variant bg-surface-container-high" />
+          <div className="h-10 w-10 shrink-0 rounded border border-outline-variant bg-surface-container-high" />
           <div className="flex flex-col overflow-hidden">
             <span className="truncate text-body-md font-semibold text-on-surface">
               {user?.name ?? "..."}

@@ -25,7 +25,7 @@ export function DocsSidebar({ repoId }: DocsSidebarProps) {
   if (!data) return null;
 
   return (
-    <aside className="flex w-64 flex-shrink-0 flex-col overflow-y-auto border-r border-outline-variant p-6">
+    <aside className="flex w-64 shrink-0 flex-col overflow-y-auto border-r border-outline-variant p-6">
       <p className="mb-4 text-label-sm uppercase tracking-wider text-on-surface-variant">
         Documentation
       </p>

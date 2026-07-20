@@ -20,13 +20,13 @@ export function DocsTopBar({ repo }: DocsTopBarProps) {
   }
 
   return (
-    <header className="flex flex-shrink-0 items-center justify-between border-b border-outline-variant px-8 py-4">
+    <header className="flex shrink-0 items-center justify-between border-b border-outline-variant px-8 py-4">
       <div className="flex min-w-0 items-center gap-3">
-        <Network size={22} className="flex-shrink-0 text-on-surface" />
+        <Network size={22} className="shrink-0 text-on-surface" />
         <p className="font-headline-lg text-body-lg font-bold text-on-surface">
           GitFlow
         </p>
-        <p className="break-words font-mono text-body-md text-on-surface-variant">
+        <p className="wrap-break-word font-mono text-body-md text-on-surface-variant">
           {repo.owner}/{repo.name}
         </p>
       </div>

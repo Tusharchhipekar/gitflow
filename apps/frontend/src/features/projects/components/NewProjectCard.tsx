@@ -46,7 +46,7 @@ export function NewProjectCard() {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://github.com/username/repository"
-          className="h-14 w-full rounded border border-outline-variant bg-surface-container-lowest pl-12 pr-4 font-mono text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
+          className="h-14 w-full rounded border  bg-surface-container-lowest pl-12 pr-4 font-mono text-body-md placeholder:text-on-surface-variant focus:outline-none focus:border-primary"
         />
       </div>
 

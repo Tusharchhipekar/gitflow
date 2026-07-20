@@ -7,7 +7,7 @@ import { MermaidBlock } from "./MermaidBlock";
 const components: Components = {
   h1: ({ children, ...props }) => (
     <h1
-      className="mb-4 mt-8 text-headline-lg font-display font-bold text-on-surface first:mt-0"
+      className="mb-4  text-headline-lg font-display font-bold text-on-surface first:mt-0"
       {...props}
     >
       {children}

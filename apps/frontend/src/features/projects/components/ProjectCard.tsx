@@ -14,11 +14,11 @@ export function ProjectCard({ repo }: ProjectCardProps) {
       href={`/projects/${repo.id}`}
       className="flex h-full min-w-0 flex-col rounded border border-outline-variant bg-surface-container p-6 transition-colors hover:border-outline hover:bg-surface-container-high"
     >
-      <h3 className="mb-2 min-w-0 break-words font-mono text-headline-md font-bold text-on-surface">
+      <h3 className="mb-2 min-w-0 wrap-break-words font-mono text-headline-md font-bold text-on-surface">
         {repo.owner}/{repo.name}
       </h3>
       {repo.description && (
-        <p className="mb-6 line-clamp-2 flex-grow text-body-md text-on-surface-variant">
+        <p className="mb-6 line-clamp-2 grow text-body-md text-on-surface-variant">
           {repo.description}
         </p>
       )}

@@ -66,12 +66,12 @@ export function ChatBox({ pageId }: ChatBoxProps) {
             onFocus={() => messages && messages.length > 0 && setHistoryOpen(true)}
             placeholder="Ask AI about this page..."
             disabled={sendMessage.isPending}
-            className="w-full flex-1 bg-transparent font-mono text-body-md text-on-surface placeholder:text-outline focus:outline-none"
+            className="w-full flex-1 bg-transparent font-mono  placeholder:text-outline focus:outline-none"
           />
           <button
             type="submit"
             disabled={sendMessage.isPending || !input.trim()}
-            className="flex-shrink-0 text-primary transition-transform hover:scale-110 disabled:opacity-40 disabled:hover:scale-100"
+            className="shrink-0 text-primary transition-transform hover:scale-110 disabled:opacity-40 disabled:hover:scale-100"
           >
             <Send size={18} />
           </button>

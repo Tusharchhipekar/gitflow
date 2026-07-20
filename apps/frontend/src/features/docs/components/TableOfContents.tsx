@@ -31,7 +31,7 @@ export function TableOfContents({ markdown }: TableOfContentsProps) {
   if (items.length === 0) return null;
 
   return (
-    <aside className="w-64 flex-shrink-0 overflow-y-auto p-6">
+    <aside className="w-64 shrink-0 overflow-y-auto p-6">
       <p className="mb-4 text-label-sm uppercase tracking-wider text-on-surface-variant">
         On this page
       </p>
