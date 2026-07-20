@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Share2, LogOut, Check } from "lucide-react";
+import { Share2, LogOut, Check, Network } from "lucide-react";
 import type { Repo } from "@repo/types";
 import { useLogout } from "@/features/auth/hooks/useAuth";
 
@@ -14,7 +14,6 @@ export function DocsTopBar({ repo }: DocsTopBarProps) {
   const [copied, setCopied] = useState(false);
 
   function handleShare() {
-    
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -22,11 +21,12 @@ export function DocsTopBar({ repo }: DocsTopBarProps) {
 
   return (
     <header className="flex flex-shrink-0 items-center justify-between border-b border-outline-variant px-8 py-4">
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <Network size={22} className="flex-shrink-0 text-on-surface" />
         <p className="font-headline-lg text-body-lg font-bold text-on-surface">
           GitFlow
         </p>
-        <p className="font-mono text-body-md text-on-surface-variant">
+        <p className="break-words font-mono text-body-md text-on-surface-variant">
           {repo.owner}/{repo.name}
         </p>
       </div>

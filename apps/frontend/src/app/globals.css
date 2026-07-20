@@ -157,3 +157,28 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--outline-variant) var(--surface-container-lowest);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--surface-container-lowest);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--outline-variant);
+  border-radius: 8px;
+  border: 2px solid var(--surface-container-lowest);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--outline);
+}
