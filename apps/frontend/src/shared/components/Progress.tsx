@@ -20,13 +20,11 @@ export function Progress({ status }: ProgressProps) {
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="flex items-center justify-between text-label-sm">
-        <span className="uppercase tracking-wide text-on-surface-variant">
-          Extraction status
-        </span>
+      <div className="flex items-center justify-between font-mono text-label-sm uppercase tracking-wider">
+        <span className="text-on-surface-variant">Extraction status</span>
         <span
           className={cn(
-            "font-medium",
+            "font-bold",
             isFailed ? "text-error" : "text-on-surface",
           )}
         >

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat, JetBrains_Mono } from "next/font/google";
+import { Inter, Montserrat, Fira_Code } from "next/font/google";
 import { QueryProvider } from "@/shared/lib/query-provider";
 import "./globals.css";
 
@@ -13,7 +13,7 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const firaCode = Fira_Code({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning={true} data-qb-installed={true} >
       <body
-        className={`${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${montserrat.variable} ${firaCode.variable} antialiased`}
       >
         <QueryProvider>{children}</QueryProvider>
       </body>
