@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import prisma from "@repo/db-prisma";
 
-// page's section -> repo -> userId chain, so a user can only
-
+// Ownership is checked via the page's section -> repo -> userId chain, so a user can only
+// ever fetch pages belonging to their own repos.
 export const getPageController = async (req: Request, res: Response) => {
   const userId = req.userId;
   if (!userId) {

@@ -12,6 +12,7 @@ import AuthRouter from "./routes/auth.route";
 import { repoRouter } from "./routes/repo.route";
 import { sectionRouter } from "./routes/section.route";
 import { pageRouter } from "./routes/page.route";
+import { messageRouter } from "./routes/message.route";
 
 export const app = express();
 
@@ -55,6 +56,7 @@ app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/repo", repoRouter);
 app.use("/api/v1/repo", sectionRouter);
 app.use("/api/v1/page", pageRouter);
+app.use("/api/v1/page", messageRouter);
 
 app.listen(config.PORT, () => {
   console.log(`Server is running on port http://localhost:${config.PORT}`);
