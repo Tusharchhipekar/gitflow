@@ -2,6 +2,7 @@ import prisma from "@repo/db-prisma";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { getModel } from "./agent.worker";
 import { fetchFilesContents } from "../github-fetch";
+import { callWithRateLimit } from "./rate-limiter";
 
 const MERMAID_BLOCK_PATTERN = /```mermaid[\s\S]*?```/;
 
@@ -19,10 +20,12 @@ async function callModel(
   userPrompt: string,
 ): Promise<string> {
   const model = getModel();
-  const response = await model.invoke([
-    new SystemMessage(systemPrompt),
-    new HumanMessage(userPrompt),
-  ]);
+  const response = await callWithRateLimit(() =>
+    model.invoke([
+      new SystemMessage(systemPrompt),
+      new HumanMessage(userPrompt),
+    ]),
+  );
 
   const text =
     typeof response.content === "string"

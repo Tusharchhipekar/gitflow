@@ -22,7 +22,7 @@
         "EMAIL_USER",
         "FRONTEND_URL",
         "LLM_PROVIDER",
-        "MISTRAL_API_KEY"
+        "MISTRAL_API_KEY",
       ]
     },
     "dev": {

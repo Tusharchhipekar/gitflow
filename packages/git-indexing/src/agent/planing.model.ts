@@ -1,6 +1,7 @@
 import prisma from "@repo/db-prisma";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { getModel } from "./agent.worker";
+import { callWithRateLimit } from "./rate-limiter";
 import {
   SectionPlanArraySchema,
   PagePlanArraySchema,
@@ -13,10 +14,12 @@ async function callModel(
   userPrompt: string,
 ): Promise<string> {
   const model = getModel();
-  const response = await model.invoke([
-    new SystemMessage(systemPrompt),
-    new HumanMessage(userPrompt),
-  ]);
+  const response = await callWithRateLimit(() =>
+    model.invoke([
+      new SystemMessage(systemPrompt),
+      new HumanMessage(userPrompt),
+    ]),
+  );
 
   const text =
     typeof response.content === "string"
@@ -152,7 +155,7 @@ export async function planRepo(repoId: number, files: string[]): Promise<void> {
           slug: page.slug,
           title: page.title,
           order: page.order,
-          markdown: "", // filled in by the future "generating" step
+          markdown: "", // filled in by the "generating" step
           sourceFiles: JSON.stringify(page.sourceFiles),
         },
       });
