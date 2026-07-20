@@ -115,7 +115,20 @@ describe("Message endpoints (no LLM/GitHub calls)", () => {
         .send({ content: "   " });
 
       expect(res.status).toBe(400);
-      expect(res.body.error).toMatch(/required/i);
+      expect(res.body.error.fieldErrors.content).toBeDefined();
+      expect(res.body.error.fieldErrors.content.length).toBeGreaterThan(0);
+    });
+
+    test("rejects content over the 4000 character limit", async () => {
+      const tooLong = "a".repeat(4001);
+
+      const res = await request(app)
+        .post(`/api/v1/page/${pageId}/messages`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send({ content: tooLong });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error.fieldErrors.content).toBeDefined();
     });
 
     test("returns 404 for a page that doesn't exist", async () => {
@@ -153,8 +166,6 @@ describe("Message endpoints (no LLM/GitHub calls)", () => {
         where: { pageId, userId },
       });
 
-      // At least the one exchange from the previous test: one "user" row,
-      // one "assistant" row.
       const userMsgs = messages.filter((m) => m.role === "user");
       const assistantMsgs = messages.filter((m) => m.role === "assistant");
 

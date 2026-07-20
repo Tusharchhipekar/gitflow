@@ -10,6 +10,7 @@ import {
   createRateLimiter,
   fetchFilesContents,
 } from "@repo/git-indexing";
+import { CreateMessageInputSchema } from "@repo/types";
 
 const { callWithRateLimit } = createRateLimiter(2_000);
 
@@ -24,19 +25,24 @@ export const getMessagesController = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Invalid page id" });
   }
 
-  const page = await prisma.page.findFirst({
-    where: { id: pageId, section: { repo: { userId: Number(userId) } } },
-  });
-  if (!page) {
-    return res.status(404).json({ error: "Page not found" });
+  try {
+    const page = await prisma.page.findFirst({
+      where: { id: pageId, section: { repo: { userId: Number(userId) } } },
+    });
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
+
+    const messages = await prisma.message.findMany({
+      where: { pageId, userId: Number(userId) },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return res.json(messages);
+  } catch (error) {
+    console.error(`Error fetching messages for page ${pageId}:`, error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-
-  const messages = await prisma.message.findMany({
-    where: { pageId, userId: Number(userId) },
-    orderBy: { createdAt: "asc" },
-  });
-
-  return res.json(messages);
 };
 
 export const postMessageController = async (req: Request, res: Response) => {
@@ -50,11 +56,11 @@ export const postMessageController = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Invalid page id" });
   }
 
-  const content =
-    typeof req.body?.content === "string" ? req.body.content.trim() : "";
-  if (!content) {
-    return res.status(400).json({ error: "Message content is required" });
+  const result = CreateMessageInputSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: result.error.flatten() });
   }
+  const { content } = result.data;
 
   const page = await prisma.page.findFirst({
     where: { id: pageId, section: { repo: { userId: Number(userId) } } },
@@ -66,8 +72,6 @@ export const postMessageController = async (req: Request, res: Response) => {
   }
 
   try {
-    // Prior conversation for this page, oldest first — gives the model memory
-    // of earlier turns in this page's chat.
     const priorMessages = await prisma.message.findMany({
       where: { pageId, userId: Number(userId) },
       orderBy: { createdAt: "asc" },
