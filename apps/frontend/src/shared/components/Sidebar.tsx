@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, FolderOpen, Network } from "lucide-react";
-import { useMe, useLogout } from "@/features/auth/hooks/useAuth";
+import { useMe } from "@/features/auth/hooks/useAuth";
 
 const NAV_ITEMS = [
   { href: "/search", label: "Search", icon: Search },
@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: user } = useMe();
-  const logout = useLogout();
+  
 
   return (
     <nav className="flex h-full w-72 flex-shrink-0 flex-col border-r border-outline-variant bg-surface">
