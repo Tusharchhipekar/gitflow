@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
 import { useRepos } from "../hooks/useRepos";
 import { ProjectCard } from "./ProjectCard";
 import { NewProjectCard } from "./NewProjectCard";
 import { Input } from "@/shared/components/Input";
+import { useLogout } from "@/features/auth/hooks/useAuth";
 
 export function ProjectsGrid() {
   const { data: repos, isLoading, error } = useRepos();
   const [query, setQuery] = useState("");
+  const logout = useLogout();
 
   const filtered = useMemo(() => {
     if (!repos) return [];
@@ -34,13 +36,23 @@ export function ProjectsGrid() {
           </p>
         </div>
 
-        <Input
-          icon={<Search size={16} />}
-          placeholder="Find repository..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="h-12 w-full lg:w-72"
-        />
+        <div className="flex w-full items-center gap-4 lg:w-auto">
+          <Input
+            icon={<Search size={16} />}
+            placeholder="Find repository..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="h-12 flex-1 lg:w-72"
+          />
+          <button
+            type="button"
+            onClick={() => logout.mutate()}
+            className="flex h-12 items-center gap-2 whitespace-nowrap rounded border border-outline-variant bg-surface-container px-6 font-mono text-label-sm uppercase tracking-wider text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+          >
+            <LogOut size={20} />
+            Logout
+          </button>
+        </div>
       </div>
 
       <NewProjectCard />

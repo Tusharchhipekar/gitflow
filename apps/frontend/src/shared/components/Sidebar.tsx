@@ -49,7 +49,7 @@ export function Sidebar() {
       <div className="mt-auto p-6">
         <button
           type="button"
-          onClick={() => logout.mutate()}
+          
           className="flex w-full items-center gap-3 rounded border border-outline-variant bg-surface-container-highest p-3 text-left transition-colors hover:bg-surface-bright"
         >
           <div className="h-10 w-10 flex-shrink-0 rounded border border-outline-variant bg-surface-container-high" />
