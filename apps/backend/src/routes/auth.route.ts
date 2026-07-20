@@ -90,7 +90,7 @@ AuthRouter.get(
       res.cookie("token", accessToken, ACCESS_COOKIE_OPTIONS);
       res.cookie("refreshToken", refreshToken, REFRESH_COOKIE_OPTIONS);
 
-      res.redirect(`${config.FRONTEND_URL}/dashboard`);
+      res.redirect(`${config.FRONTEND_URL}/projects`);
     } catch (err) {
       console.error("Error during Google authentication:", err);
       res.redirect(`${config.FRONTEND_URL}/login?error=server_error`);

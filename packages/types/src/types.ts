@@ -21,6 +21,7 @@ export const SigninInputSchema = z.object({
 });
 
 export const AuthResponseSchema = z.object({
+  accessToken: z.string(),
   user: z.object({
     id: z.number().int(),
     email: z.string().email(),
@@ -39,7 +40,7 @@ export const ListReposQuerySchema = z.object({
 });
 
 export const CreateMessageInputSchema = z.object({
-  content: z.string().min(1).max(4000),
+  content: z.string().trim().min(1).max(4000),
 });
 
 export type SignupInput = z.infer<typeof SignupInputSchema>;
