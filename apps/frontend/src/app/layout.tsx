@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat, JetBrains_Mono } from "next/font/google";
+import { QueryProvider } from "@/shared/lib/query-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,8 +19,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GitFlow",
-  description: "GitFlow",
+  title: "GitFlow — Your Code, Documented Instantly",
+  description:
+    "GitFlow analyzes your repositories and generates beautifully structured documentation, automatically.",
 };
 
 export default function RootLayout({
@@ -28,11 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className="dark">
+      <body
+        className={`${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} antialiased`}
+      >
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

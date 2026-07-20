@@ -13,6 +13,7 @@ import { repoRouter } from "./routes/repo.route";
 import { sectionRouter } from "./routes/section.route";
 import { pageRouter } from "./routes/page.route";
 import { messageRouter } from "./routes/message.route";
+import cors from "cors";
 
 export const app = express();
 
@@ -20,6 +21,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: config.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 
 app.use(passport.initialize());
 
