@@ -1,0 +1,20 @@
+FROM oven/bun:1 AS base
+
+FROM base AS pruner
+WORKDIR /app
+RUN bun add -g turbo
+COPY . .
+RUN turbo prune @repo/backend --docker
+
+FROM base AS installer
+WORKDIR /app
+COPY --from=pruner /app/out/json/ .
+RUN bun install --frozen-lockfile
+COPY --from=pruner /app/out/full/ .
+RUN cd packages/db-prisma && bunx prisma generate
+
+FROM base AS runner
+WORKDIR /app
+COPY --from=installer /app .
+EXPOSE 3000
+CMD ["bun", "./apps/backend/src/index.ts"]
