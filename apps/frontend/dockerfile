@@ -16,5 +16,5 @@ RUN bun run turbo build --filter=@repo/frontend
 FROM base AS runner
 WORKDIR /app
 COPY --from=installer /app .
-EXPOSE 3000
+
 CMD ["bun", "--cwd", "apps/frontend", "start"]

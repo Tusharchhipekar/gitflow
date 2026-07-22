@@ -7,9 +7,6 @@ import { callWithRateLimit } from "./rate-limiter";
 const MERMAID_BLOCK_PATTERN = /```mermaid[\s\S]*?```/;
 
 function stripCodeFences(text: string): string {
-  // Model sometimes wraps the *whole* response in a stray ```markdown fence —
-  // strip only a leading/trailing wrapper fence, not fences inside the content
-  // (e.g. the mermaid block itself must survive this).
   const trimmed = text.trim();
   const wrapperMatch = trimmed.match(/^```(?:markdown)?\n([\s\S]*)\n```$/);
   return wrapperMatch?.[1] ?? trimmed;
@@ -92,8 +89,6 @@ response, no explanation of what you're doing. Start directly with a heading.`;
     markdown = await callModel(systemPrompt, retryPrompt);
 
     if (!MERMAID_BLOCK_PATTERN.test(markdown)) {
-      // Don't fail the whole page over a missing diagram — ship the prose,
-      // log loudly so it's visible this page needs a manual look.
       console.error(
         `Page "${page.title}" (id ${page.id}): still no mermaid block after retry, saving without diagram`,
       );
@@ -128,8 +123,6 @@ export async function generateRepo(repoId: number): Promise<void> {
           data: { markdown },
         });
       } catch (err) {
-        // One page failing shouldn't take down the whole repo's generation —
-        // log it and leave that page's markdown empty for a manual retry later.
         console.error(
           `Failed to generate page "${page.title}" (id ${page.id}):`,
           err,

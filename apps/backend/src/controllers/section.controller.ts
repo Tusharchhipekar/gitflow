@@ -1,9 +1,6 @@
 import type { Request, Response } from "express";
 import prisma from "@repo/db-prisma";
 
-// Returns the full generated docs tree for a repo: sections in order, each
-// with its pages in order, including markdown and source file list. This is
-// the endpoint a frontend uses to actually render the generated documentation.
 export const getRepoSectionsController = async (
   req: Request,
   res: Response,

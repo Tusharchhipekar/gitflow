@@ -108,7 +108,6 @@ describe("Auth endpoints", () => {
     });
   });
 
-  // ---------- ME (protected route / authMiddleware) ----------
   describe("GET /api/v1/auth/me", () => {
     test("returns user data with a valid access token", async () => {
       const res = await request(app)
@@ -141,7 +140,6 @@ describe("Auth endpoints", () => {
     });
   });
 
-  // ---------- REFRESH ----------
   describe("POST /api/v1/auth/refresh", () => {
     test("issues a new access token with a valid refresh cookie", async () => {
       expect(refreshCookie).toBeDefined();
@@ -180,7 +178,6 @@ describe("Auth endpoints", () => {
     });
   });
 
-  // ---------- LOGOUT ----------
   describe("POST /api/v1/auth/logout", () => {
     test("clears the refresh token cookie", async () => {
       const res = await request(app)
@@ -192,7 +189,7 @@ describe("Auth endpoints", () => {
 
       const setCookie = res.headers["set-cookie"];
       const cookieStr = Array.isArray(setCookie) ? setCookie[0] : setCookie;
-      // Cleared cookies are sent back with an empty value / past expiry
+
       expect(cookieStr).toMatch(/refreshToken=;/);
     });
   });

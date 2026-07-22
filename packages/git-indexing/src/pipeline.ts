@@ -3,9 +3,6 @@ import { fetchRepoTree } from "./github-fetch";
 import { planRepo } from "./agent/planing.model";
 import { generateRepo } from "./agent/generating.model";
 
-// Exported so the API layer (repo.controller.ts) can check it *before*
-// creating a repo row, rejecting the request cleanly instead of letting
-// a repo get stuck in "pending" with no indexing job ever picking it up.
 export const indexingUsers = new Set<number>();
 
 export async function startIndexing(

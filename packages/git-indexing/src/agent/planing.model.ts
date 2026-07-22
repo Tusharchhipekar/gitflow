@@ -31,9 +31,6 @@ async function callModel(
   return text.replace(/```json|```/g, "").trim();
 }
 
-// Parses raw model text as JSON, then validates against the given Zod schema.
-// Throws a clear error identifying which stage failed and why, rather than
-// letting a malformed/hallucinated response crash somewhere downstream.
 function parseAndValidate<T>(
   raw: string,
   schema: { parse: (data: unknown) => T },
@@ -48,7 +45,7 @@ function parseAndValidate<T>(
     );
   }
 
-  const result = schema.parse(json); // throws ZodError with details if invalid
+  const result = schema.parse(json);
   return result;
 }
 
@@ -126,13 +123,11 @@ export async function planRepo(repoId: number, files: string[]): Promise<void> {
     const candidateFiles = filterCandidates(files, section.pathHints);
     let pages = await planPagesForSection(section.title, candidateFiles);
 
-    // Guard against hallucinated file paths — only keep files that actually exist in the tree
     pages = pages.map((page) => ({
       ...page,
       sourceFiles: page.sourceFiles.filter((f) => files.includes(f)),
     }));
 
-    // Drop pages left with zero valid source files after the filter above
     pages = pages.filter((page) => page.sourceFiles.length > 0);
 
     if (pages.length === 0) {
@@ -155,7 +150,7 @@ export async function planRepo(repoId: number, files: string[]): Promise<void> {
           slug: page.slug,
           title: page.title,
           order: page.order,
-          markdown: "", // filled in by the "generating" step
+          markdown: "",
           sourceFiles: JSON.stringify(page.sourceFiles),
         },
       });

@@ -57,8 +57,6 @@ describe("Section endpoints (no LLM/GitHub calls)", () => {
       .send({ owner: "seed-owner", name: "seed-repo" });
     repoId = createRes.body.id;
 
-    // Manually mark the repo "ready" and seed its sections/pages directly —
-    // bypassing the real indexing pipeline entirely.
     await prisma.repo.update({
       where: { id: repoId },
       data: { status: "ready", sha: "fake-sha-for-tests" },

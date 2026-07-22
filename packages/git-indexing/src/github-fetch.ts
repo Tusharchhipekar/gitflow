@@ -89,13 +89,6 @@ export async function fetchRepoTree(
   };
 }
 
-// ---------- File content fetching (used by the "generating" step) ----------
-
-/**
- * Fetches raw content for a single file at a specific commit sha.
- * Returns null (rather than throwing) if the file can't be fetched —
- * callers should skip missing files gracefully rather than fail the whole page.
- */
 export async function fetchFileContent(
   owner: string,
   name: string,
@@ -118,10 +111,6 @@ export async function fetchFileContent(
   }
 }
 
-/**
- * Fetches content for multiple files in parallel, returning a map of
- * path -> content. Files that fail to fetch are simply omitted from the map.
- */
 export async function fetchFilesContents(
   owner: string,
   name: string,

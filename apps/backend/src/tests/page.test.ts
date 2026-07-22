@@ -2,10 +2,6 @@ import { describe, test, expect, beforeAll, afterAll, mock } from "bun:test";
 import request from "supertest";
 import prisma from "@repo/db-prisma";
 
-// No LLM or GitHub calls. Same seeding approach as section.test.ts — a page
-// is inserted directly via Prisma so the read path is fully testable without
-// ever depending on real indexing.
-
 const TEST_EMAIL = `page_test_${Date.now()}@example.com`;
 const OTHER_EMAIL = `page_other_${Date.now()}@example.com`;
 const TEST_PASSWORD = "SuperSecret123";

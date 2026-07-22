@@ -16,5 +16,5 @@ RUN cd packages/db-prisma && bunx prisma generate
 FROM base AS runner
 WORKDIR /app
 COPY --from=installer /app .
-EXPOSE 3000
+EXPOSE 4000
 CMD ["bun", "./apps/backend/src/index.ts"]

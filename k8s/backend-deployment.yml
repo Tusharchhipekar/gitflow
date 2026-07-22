@@ -39,13 +39,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /api/status/health
-            port: 3000
+            port: 4000
           initialDelaySeconds: 90
           timeoutSeconds: 10
         readinessProbe:
           httpGet:
             path: /api/status/ready
-            port: 3000
+            port: 4000
           initialDelaySeconds: 30
           timeoutSeconds: 10
         env:
@@ -110,5 +110,5 @@ spec:
               name: app
               key: FRONTEND_URL
         ports:
-        - containerPort: 3000
+        - containerPort: 4000
           name: backend

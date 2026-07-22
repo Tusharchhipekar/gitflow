@@ -47,4 +47,4 @@ portForward:
     resourceName: backend-service
     namespace: default
     port: 80
-    localPort: 3000
+    localPort: 4000
