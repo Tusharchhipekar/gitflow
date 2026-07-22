@@ -1,0 +1,50 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: gitflow
+
+build:
+  tagPolicy:
+    sha256: {}
+      
+  artifacts:
+    - image: backend
+      context: .
+      docker:
+        dockerfile: apps/backend/dockerfile
+      sync:
+        infer:
+          - "apps/backend/src/**"
+          
+    - image: frontend
+      context: .
+      docker:
+        dockerfile: apps/frontend/dockerfile
+      sync:
+        infer:
+          - "apps/frontend/src/**"
+
+manifests:
+  rawYaml:
+    - k8s/secret.yml
+
+    - k8s/backend-deployment.yml
+    - k8s/backend-service.yml
+
+    - k8s/frontend-deployment.yml
+    - k8s/frontend-service.yml
+
+    - k8s/ingress.yml
+
+
+portForward:
+  - resourceType: service
+    resourceName: frontend-service
+    namespace: default
+    port: 80
+    localPort: 3000
+  - resourceType: service
+    resourceName: backend-service
+    namespace: default
+    port: 80
+    localPort: 3000

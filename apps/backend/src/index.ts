@@ -55,8 +55,12 @@ passport.use(
   ),
 );
 
-app.get("/", (_req, res) => {
-  res.status(200).json({ message: "Health check ok" });
+app.get("/api/status/health", (_req, res) => {
+  res.status(200).json({ status: "ok", uptime: process.uptime() });
+});
+
+app.get("/api/status/ready", (_req, res) => {
+  res.status(200).json({ status: "ready" });
 });
 
 app.use("/api/v1/auth", AuthRouter);

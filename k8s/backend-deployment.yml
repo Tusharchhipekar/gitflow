@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      initContainers:
+      - image: backend:latest
+        name: db-migrate
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "cd /app/packages/db-prisma && bunx prisma migrate deploy --config=/app/packages/db-prisma/prisma.config.ts"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: DATABASE_URL
+      containers:
+      - image: backend:latest
+        name: backend
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "250m"
+            memory: "250Mi"
+        livenessProbe:
+          httpGet:
+            path: /api/status/health
+            port: 3000
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/status/ready
+            port: 3000
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        env:
+        - name: PORT
+          valueFrom:
+            secretKeyRef:
+              name: port
+              key: PORT
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: DATABASE_URL
+        - name: JWT_ACCESS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt
+              key: JWT_ACCESS_SECRET
+        - name: JWT_REFRESH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt
+              key: JWT_REFRESH_SECRET
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: google
+              key: GOOGLE_CLIENT_ID
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: google
+              key: GOOGLE_CLIENT_SECRET
+        - name: GOOGLE_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: google
+              key: GOOGLE_REFRESH_TOKEN
+        - name: EMAIL_USER
+          valueFrom:
+            secretKeyRef:
+              name: email
+              key: EMAIL_USER
+        - name: LLM_PROVIDER
+          valueFrom:
+            secretKeyRef:
+              name: llm
+              key: LLM_PROVIDER
+        - name: MISTRAL_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm
+              key: MISTRAL_API_KEY
+        - name: NODE_ENV
+          valueFrom:
+            secretKeyRef:
+              name: app
+              key: NODE_ENV
+        - name: FRONTEND_URL
+          valueFrom:
+            secretKeyRef:
+              name: app
+              key: FRONTEND_URL
+        ports:
+        - containerPort: 3000
+          name: backend
