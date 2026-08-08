@@ -15,7 +15,6 @@ describe("Auth endpoints", () => {
     await prisma.user.deleteMany({ where: { email: TEST_EMAIL } });
   });
 
-  // ---------- SIGNUP ----------
   describe("POST /api/v1/auth/signup", () => {
     test("creates a new user with valid input", async () => {
       const res = await request(app).post("/api/v1/auth/signup").send({
@@ -30,7 +29,6 @@ describe("Auth endpoints", () => {
       expect(res.body.accessToken).toBeDefined();
       expect(res.body.user.email).toBe(TEST_EMAIL);
 
-      // Grab the refreshToken cookie for later tests
       const setCookie = res.headers["set-cookie"];
       expect(setCookie).toBeDefined();
       refreshCookie = Array.isArray(setCookie) ? setCookie[0] : setCookie;
@@ -61,7 +59,6 @@ describe("Auth endpoints", () => {
     });
   });
 
-  // ---------- SIGNIN ----------
   describe("POST /api/v1/auth/signin", () => {
     test("signs in with correct credentials", async () => {
       const res = await request(app).post("/api/v1/auth/signin").send({

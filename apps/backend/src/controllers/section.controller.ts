@@ -16,7 +16,6 @@ export const getRepoSectionsController = async (
   }
 
   try {
-    // Ownership check first — never expose another user's repo content
     const repo = await prisma.repo.findFirst({
       where: { id, userId: Number(userId) },
     });
@@ -35,8 +34,6 @@ export const getRepoSectionsController = async (
       },
     });
 
-    // sourceFiles is stored as a JSON string (per schema) — parse it back into
-    // an array for the response so consumers don't have to JSON.parse it themselves.
     const formatted = sections.map((section) => ({
       id: section.id,
       title: section.title,

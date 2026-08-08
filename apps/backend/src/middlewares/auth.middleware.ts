@@ -13,14 +13,13 @@ export const authMiddleware = (
   next: NextFunction,
 ) => {
   try {
-    // Support both cookie-based (Google OAuth) and header-based (signin/signup) auth
     const cookieToken = req.cookies?.token;
     const authHeader = req.headers.authorization;
     const headerToken = authHeader?.startsWith("Bearer ")
       ? authHeader.split(" ")[1]
       : undefined;
 
-    const token = cookieToken || headerToken;
+    const token = headerToken || cookieToken;
 
     if (!token) {
       res.status(401).json({ message: "No access token provided" });

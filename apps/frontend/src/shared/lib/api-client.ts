@@ -11,7 +11,7 @@ export function getAccessToken() {
 }
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000",
   withCredentials: true,
 });
 

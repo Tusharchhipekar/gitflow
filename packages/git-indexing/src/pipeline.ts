@@ -33,9 +33,9 @@ export async function startIndexing(
       },
     });
 
-    await planRepo(repoId, result.files); // writes Sections/Pages, sets status: "generating"
+    await planRepo(repoId, result.files);
 
-    await generateRepo(repoId); // writes markdown + diagrams per page, sets status: "ready"
+    await generateRepo(repoId);
   } catch (err) {
     console.error(`Indexing failed for repo ${repoId}:`, err);
     await prisma.repo.update({

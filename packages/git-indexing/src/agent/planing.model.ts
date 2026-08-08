@@ -49,8 +49,6 @@ function parseAndValidate<T>(
   return result;
 }
 
-// ---------- Pass 1: sections ----------
-
 async function planSections(
   owner: string,
   name: string,
@@ -70,8 +68,6 @@ belong in this section (used internally, not shown to users).`;
   const raw = await callModel(systemPrompt, userPrompt);
   return parseAndValidate(raw, SectionPlanArraySchema, "planSections");
 }
-
-// ---------- Pass 2: pages per section ----------
 
 async function planPagesForSection(
   sectionTitle: string,
@@ -96,11 +92,9 @@ Respond with ONLY a JSON array, no prose, no markdown fences. Each item:
   );
 }
 
-// ---------- Helpers ----------
-
 function filterCandidates(files: string[], hints: string[]): string[] {
   const matched = files.filter((f) => hints.some((hint) => f.includes(hint)));
-  return matched.length > 0 ? matched : files; // fallback: no match -> give the whole list
+  return matched.length > 0 ? matched : files;
 }
 
 function dedupeSlugs(pages: PagePlan[]): PagePlan[] {
@@ -111,8 +105,6 @@ function dedupeSlugs(pages: PagePlan[]): PagePlan[] {
     return count === 0 ? page : { ...page, slug: `${page.slug}-${count + 1}` };
   });
 }
-
-// ---------- Orchestrator ----------
 
 export async function planRepo(repoId: number, files: string[]): Promise<void> {
   const repo = await prisma.repo.findUniqueOrThrow({ where: { id: repoId } });

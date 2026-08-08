@@ -38,7 +38,7 @@ interface PageContext {
   id: number;
   slug: string;
   title: string;
-  sourceFiles: string; // JSON string, per schema
+  sourceFiles: string;
 }
 
 async function generatePageMarkdown(

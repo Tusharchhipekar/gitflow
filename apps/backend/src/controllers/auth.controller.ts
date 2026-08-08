@@ -149,6 +149,13 @@ export const refreshController = async (req: Request, res: Response) => {
       return;
     }
 
+    const decoded = jwt.decode(token) as { id: string; type: string } | null;
+
+    if (decoded && decoded.type !== "refresh") {
+      res.status(401).json({ message: "Invalid token type" });
+      return;
+    }
+
     let payload: { id: string; type: string };
     try {
       payload = jwt.verify(token, config.JWT_REFRESH_SECRET) as {
@@ -157,11 +164,6 @@ export const refreshController = async (req: Request, res: Response) => {
       };
     } catch {
       res.status(401).json({ message: "Invalid or expired refresh token" });
-      return;
-    }
-
-    if (payload.type !== "refresh") {
-      res.status(401).json({ message: "Invalid token type" });
       return;
     }
 
@@ -178,15 +180,15 @@ export const refreshController = async (req: Request, res: Response) => {
 
 export const logoutController = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-    });
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+    });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     });
 
     res.status(200).json({ message: "logged out successfully", success: true });

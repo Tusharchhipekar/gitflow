@@ -39,8 +39,6 @@ export function AuthForm() {
 
   return (
     <div className="w-full max-w-md rounded-md border border-outline-variant bg-surface-container p-8 shadow-2xl">
-      {/* Tabs — one sliding indicator, not two separate static borders, so
-          there's nothing that can visually mis-align between states. */}
       <div className="relative mb-8 flex border-b border-outline-variant pb-2">
         <button
           type="button"

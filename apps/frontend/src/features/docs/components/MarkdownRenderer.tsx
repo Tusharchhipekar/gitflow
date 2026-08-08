@@ -80,12 +80,10 @@ const components: Components = {
     const { className, children, ...rest } = props;
     const match = /language-(\w+)/.exec(className || "");
 
-    // A mermaid fenced block gets rendered as an actual diagram, not raw text
     if (match?.[1] === "mermaid") {
       return <MermaidBlock chart={String(children).trim()} />;
     }
 
-    // Inline code (no language, no surrounding <pre>)
     if (!match) {
       return (
         <code
@@ -97,7 +95,6 @@ const components: Components = {
       );
     }
 
-    // Fenced code block with a language, but not mermaid
     return (
       <code className={`font-mono text-body-md ${className ?? ""}`} {...rest}>
         {children}

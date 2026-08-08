@@ -20,14 +20,14 @@ const ACCESS_COOKIE_OPTIONS = {
   httpOnly: true,
   secure: config.NODE_ENV === "production",
   sameSite: "lax" as const,
-  maxAge: 24 * 60 * 60 * 1000, // 1 day
+  maxAge: 24 * 60 * 60 * 1000,
 };
 
 const REFRESH_COOKIE_OPTIONS = {
   httpOnly: true,
   secure: config.NODE_ENV === "production",
   sameSite: "strict" as const,
-  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days, matches signup/signin
+  maxAge: 30 * 24 * 60 * 60 * 1000,
 };
 
 AuthRouter.post("/signup", signupController);

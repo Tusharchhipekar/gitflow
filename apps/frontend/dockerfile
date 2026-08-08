@@ -1,20 +1,42 @@
-FROM oven/bun:1 AS base
+# syntax=docker/dockerfile:1
+
+FROM oven/bun:1-slim AS base
 
 FROM base AS pruner
 WORKDIR /app
-RUN bun add -g turbo
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun add -g turbo
 COPY . .
 RUN turbo prune @repo/frontend --docker
 
-FROM base AS installer
+FROM base AS builder
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
-RUN bun install --frozen-lockfile
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
+ARG NEXT_PUBLIC_API_URL=""
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run turbo build --filter=@repo/frontend
 
-FROM base AS runner
+# `output: "standalone"` traces only the files each route actually needs, so
+# the runner below ships a trimmed node_modules instead of the full workspace
+# install — this is what cuts the final image down from ~1.5GB.
+FROM oven/bun:1-alpine AS runner
 WORKDIR /app
-COPY --from=installer /app .
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
-CMD ["bun", "--cwd", "apps/frontend", "start"]
+RUN addgroup -S -g 1001 frontend \
+ && adduser -S -u 1001 -G frontend frontend
+
+COPY --from=builder --chown=frontend:frontend /app/apps/frontend/.next/standalone ./
+COPY --from=builder --chown=frontend:frontend /app/apps/frontend/.next/static ./apps/frontend/.next/static
+COPY --from=builder --chown=frontend:frontend /app/apps/frontend/public ./apps/frontend/public
+
+USER frontend
+EXPOSE 3000
+CMD ["bun", "apps/frontend/server.js"]

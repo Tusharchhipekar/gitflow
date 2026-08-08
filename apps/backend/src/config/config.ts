@@ -5,6 +5,10 @@ if (!process.env.PORT) {
   throw new Error("PORT is not defined");
 }
 
+if (!process.env.BASE_URL) {
+  throw new Error("BASE_URL is not defined");
+}
+
 if (!process.env.JWT_ACCESS_SECRET) {
   throw new Error("JWT_ACCESS_SECRET is not defined");
 }
@@ -43,6 +47,7 @@ if (!process.env.FRONTEND_URL) {
 
 export const config = {
   PORT: process.env.PORT,
+  BASE_URL: process.env.BASE_URL,
   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   DATABASE_URL: process.env.DATABASE_URL,

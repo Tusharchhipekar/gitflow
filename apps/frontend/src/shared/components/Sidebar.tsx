@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, FolderOpen, Network } from "lucide-react";
-import { useMe } from "@/features/auth/hooks/useAuth";
+import { Search, FolderOpen, Network, LogOut } from "lucide-react";
+import { useMe, useLogout } from "@/features/auth/hooks/useAuth";
 
 const NAV_ITEMS = [
   { href: "/search", label: "Search", icon: Search },
@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: user } = useMe();
-  
+  const logout = useLogout();
 
   return (
     <nav className="flex h-full w-72 shrink-0 flex-col border-r border-outline-variant bg-surface">
@@ -49,11 +49,12 @@ export function Sidebar() {
       <div className="mt-auto p-6">
         <button
           type="button"
-          
+          onClick={() => logout.mutate()}
+          disabled={logout.isPending}
           className="flex w-full items-center gap-3 rounded border border-outline-variant bg-surface-container-highest p-3 text-left transition-colors hover:bg-surface-bright"
         >
           <div className="h-10 w-10 shrink-0 rounded border border-outline-variant bg-surface-container-high" />
-          <div className="flex flex-col overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-hidden">
             <span className="truncate text-body-md font-semibold text-on-surface">
               {user?.name ?? "..."}
             </span>
@@ -61,6 +62,7 @@ export function Sidebar() {
               {user?.email ?? ""}
             </span>
           </div>
+          <LogOut size={16} className="shrink-0 text-on-surface-variant" />
         </button>
       </div>
     </nav>

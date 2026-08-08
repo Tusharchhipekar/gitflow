@@ -207,7 +207,6 @@ describe("Message endpoints (no LLM/GitHub calls)", () => {
 
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
-      // Two exchanges happened above -> at least 4 messages (2 user, 2 assistant)
       expect(res.body.length).toBeGreaterThanOrEqual(4);
 
       const roles = res.body.map((m: any) => m.role);

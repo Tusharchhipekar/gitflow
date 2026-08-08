@@ -19,9 +19,7 @@ let createdUserId: number;
 describe("Repo endpoints (no LLM/GitHub calls)", () => {
   beforeAll(async () => {
     mock.module("@repo/git-indexing", () => ({
-      startIndexing: async () => {
-        // no-op — never calls GitHub or any LLM
-      },
+      startIndexing: async () => {},
       indexingUsers: new Set<number>(),
     }));
 
@@ -52,7 +50,6 @@ describe("Repo endpoints (no LLM/GitHub calls)", () => {
     });
   });
 
-  // ---------- CREATE ----------
   describe("POST /api/v1/repo/create", () => {
     test("rejects unauthenticated request", async () => {
       const res = await request(app)
@@ -106,11 +103,10 @@ describe("Repo endpoints (no LLM/GitHub calls)", () => {
       expect(res.status).toBe(409);
       expect(res.body.error).toMatch(/already have an indexing job/i);
 
-      indexingUsers.delete(createdUserId); // cleanup for later tests
+      indexingUsers.delete(createdUserId);
     });
   });
 
-  // ---------- LIST ----------
   describe("GET /api/v1/repo/list", () => {
     test("returns the user's repos", async () => {
       const res = await request(app)
@@ -128,7 +124,6 @@ describe("Repo endpoints (no LLM/GitHub calls)", () => {
     });
   });
 
-  // ---------- GET ONE ----------
   describe("GET /api/v1/repo/:id", () => {
     test("returns the repo for its owner", async () => {
       const res = await request(app)
@@ -161,7 +156,6 @@ describe("Repo endpoints (no LLM/GitHub calls)", () => {
     });
   });
 
-  // ---------- DELETE ----------
   describe("DELETE /api/v1/repo/:id", () => {
     test("returns 404 for another user's repo", async () => {
       const res = await request(app)

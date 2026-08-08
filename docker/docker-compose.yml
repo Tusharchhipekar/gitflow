@@ -17,5 +17,32 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ..
+      dockerfile: apps/backend/dockerfile
+    container_name: gitflow-backend
+    restart: unless-stopped
+    env_file:
+      - ../apps/backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: apps/frontend/dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:4000
+    container_name: gitflow-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
 volumes:
   postgres_db:
