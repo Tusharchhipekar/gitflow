@@ -19,6 +19,15 @@ RUN --mount=type=cache,target=/root/.bun/install/cache \
 COPY --from=pruner /app/out/full/ .
 RUN cd packages/db-prisma && bunx prisma generate
 
+# Used only by the k8s db-migrate initContainer. Reuses the builder stage's
+# node_modules, which already has the prisma CLI installed locally as a
+# devDependency — avoids `bunx prisma` fetching it fresh over the network on
+# every pod start (which hangs in some cluster network setups). Not part of
+# the lean runtime image the app itself ships in.
+FROM builder AS migrator
+WORKDIR /app/packages/db-prisma
+CMD ["bunx", "prisma", "migrate", "deploy"]
+
 # Production-only install, kept separate so devDependencies (prisma CLI,
 # typescript, test libs, ...) never reach the runtime image.
 FROM base AS prod-deps

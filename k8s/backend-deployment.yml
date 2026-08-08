@@ -15,7 +15,22 @@ spec:
         app: backend
     spec:
       initContainers:
-      - image: backend:latest
+      - image: postgres:16-alpine
+        name: wait-for-postgres
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "until pg_isready -h postgres-service -p 5432 -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\"; do echo waiting for postgres...; sleep 2; done"]
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: POSTGRES_USER
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: POSTGRES_DB
+      - image: backend-migrator:latest
         name: db-migrate
         imagePullPolicy: IfNotPresent
         command: ["sh", "-c", "cd /app/packages/db-prisma && bunx prisma migrate deploy --config=/app/packages/db-prisma/prisma.config.ts"]

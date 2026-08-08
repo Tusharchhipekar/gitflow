@@ -55,3 +55,16 @@ bun.lockb.bak
 # Docker itself (avoid rebuild context bloat if you have local Dockerfiles' build artifacts)
 Dockerfile*
 .dockerignore
+
+# Not needed to build this image (turbo prune only reads package.json for
+# workspace graph resolution, never their source) — keeping these out of
+# the build context stops unrelated edits from invalidating skaffold's
+# content-hash cache and forcing a rebuild + redeploy.
+apps/backend/src
+apps/backend/tests
+packages/db-prisma/src
+packages/db-prisma/prisma
+packages/git-indexing/src
+k8s
+docker
+README.md

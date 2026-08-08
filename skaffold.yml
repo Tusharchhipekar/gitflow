@@ -4,9 +4,12 @@ metadata:
   name: gitflow
 
 build:
+  local:
+    useBuildkit: true
+
   tagPolicy:
     sha256: {}
-      
+
   artifacts:
     - image: backend
       context: .
@@ -15,7 +18,13 @@ build:
       sync:
         infer:
           - "apps/backend/src/**"
-          
+
+    - image: backend-migrator
+      context: .
+      docker:
+        dockerfile: apps/backend/dockerfile
+        target: migrator
+
     - image: frontend
       context: .
       docker:
@@ -28,6 +37,9 @@ manifests:
   rawYaml:
     - k8s/secret.yml
 
+    - k8s/postgres-deployment.yml
+    - k8s/postgres-service.yml
+
     - k8s/backend-deployment.yml
     - k8s/backend-service.yml
 
@@ -39,10 +51,11 @@ manifests:
 
 portForward:
   - resourceType: service
-    resourceName: frontend-service
-    namespace: default
+    resourceName: ingress-nginx-controller
+    namespace: ingress-nginx
     port: 80
     localPort: 3000
+
   - resourceType: service
     resourceName: backend-service
     namespace: default
