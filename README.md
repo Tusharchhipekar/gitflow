@@ -179,44 +179,6 @@ docker/               docker-compose for local Postgres
 k8s/                  Deployments, services, ingress, secrets
 ```
 
-## Getting started
-
-Requires [Bun](https://bun.sh) 1.3+ and Docker.
-
-```sh
-git clone <repo-url> gitflow && cd gitflow
-bun install
-```
-
-**1. Environment files**
-
-```sh
-cp docker/.env.example docker/.env
-cp apps/backend/.env.example apps/backend/.env
-cp packages/db-prisma/.env.example packages/db-prisma/.env
-```
-
-Fill in `apps/backend/.env` — every variable there is required, and the backend throws on startup if one is missing. You'll need a Mistral API key and Google OAuth credentials.
-
-**2. Database**
-
-```sh
-docker compose -f docker/docker-compose.yml up -d
-
-cd packages/db-prisma
-bun run db:generate     # generates the Prisma client — required before anything typechecks
-bun run db:migrate
-cd ../..
-```
-
-**3. Run**
-
-```sh
-bun run dev
-```
-
-Frontend on http://localhost:3000, API on http://localhost:4000.
-
 ## Commands
 
 From the repo root:
@@ -285,11 +247,58 @@ All routes are prefixed with `/api/v1`. Everything except the auth entry points 
 
 Access tokens are short-lived (2 minutes); the frontend's axios client refreshes them transparently on a `401`.
 
+## Local Development
+
+Requires [Bun](https://bun.sh) 1.3+ and Docker.
+
+```sh
+git clone <repo-url> gitflow && cd gitflow
+bun install
+```
+
+**1. Environment files**
+
+```sh
+cp docker/.env.example docker/.env
+cp apps/backend/.env.example apps/backend/.env
+cp packages/db-prisma/.env.example packages/db-prisma/.env
+```
+
+Fill in `apps/backend/.env` — every variable there is required, and the backend throws on startup if one is missing. You'll need a Mistral API key and Google OAuth credentials. `DATABASE_URL` can point at the local Postgres started below or at a hosted instance (e.g. Neon) — either way it must be set identically in `apps/backend/.env` and `packages/db-prisma/.env`.
+
+**2. Database**
+
+```sh
+docker compose -f docker/docker-compose.yml up -d   # skip if using a hosted Postgres
+
+cd packages/db-prisma
+bun run db:generate     # generates the Prisma client — required before anything typechecks
+bun run db:migrate
+cd ../..
+```
+
+**3. Run**
+
+```sh
+bun run dev
+```
+
+Frontend on http://localhost:3000, API on http://localhost:4000.
+
 ## Deployment
 
 Container images are built with `turbo prune --docker`, so each image only contains the workspaces it needs.
 
-Local Kubernetes (requires a cluster with the nginx ingress controller):
+**Docker Compose** — builds and runs Postgres, the backend, and the frontend as containers:
+
+```sh
+cp docker/.env.example docker/.env         # fill in real values
+docker compose -f docker/docker-compose.yml up -d --build
+```
+
+Postgres on 5432, backend on 4000, frontend on 3000. The backend reads its config from `apps/backend/.env` (`env_file`), and the frontend image is built with `NEXT_PUBLIC_API_URL=http://localhost:4000`.
+
+**Local Kubernetes** (requires a cluster with the nginx ingress controller):
 
 ```sh
 cp k8s/secret-example.yml k8s/secret.yml   # fill in real values — this file is gitignored

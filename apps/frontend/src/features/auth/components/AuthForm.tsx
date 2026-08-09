@@ -10,6 +10,9 @@ import { googleLoginUrl } from "../api";
 
 type Tab = "signin" | "signup";
 
+const DEMO_EMAIL = "demo@gitflow.dev";
+const DEMO_PASSWORD = "demo1234";
+
 export function AuthForm() {
   const [tab, setTab] = useState<Tab>("signin");
   const [name, setName] = useState("");
@@ -72,6 +75,16 @@ export function AuthForm() {
         }}
       >
         Sign in with Google
+      </Button>
+
+      <Button
+        type="button"
+        variant="secondary"
+        disabled={pending}
+        className="mt-2"
+        onClick={() => signIn.mutate({ email: DEMO_EMAIL, password: DEMO_PASSWORD })}
+      >
+        Demo Login
       </Button>
 
       <div className="relative flex items-center justify-center py-6">
