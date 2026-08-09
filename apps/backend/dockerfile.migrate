@@ -1,0 +1,26 @@
+# syntax=docker/dockerfile:1
+#
+# Railway can't target a specific stage in a multi-stage Dockerfile (unlike
+# `docker build --target`, which k8s's init container uses against ./dockerfile),
+# so this is a standalone copy that ends at the migrator stage.
+
+FROM oven/bun:1-slim AS base
+
+FROM base AS pruner
+WORKDIR /app
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun add -g turbo
+COPY . .
+RUN turbo prune @repo/backend --docker
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=pruner /app/out/json/ .
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
+COPY --from=pruner /app/out/full/ .
+RUN cd packages/db-prisma && bunx prisma generate
+
+FROM builder AS migrator
+WORKDIR /app/packages/db-prisma
+CMD ["bunx", "prisma", "migrate", "deploy"]

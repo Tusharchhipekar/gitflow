@@ -1,0 +1,11 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "apps/backend/dockerfile.migrate"
+  },
+  "deploy": {
+    "numReplicas": 1,
+    "restartPolicyType": "NEVER"
+  }
+}
