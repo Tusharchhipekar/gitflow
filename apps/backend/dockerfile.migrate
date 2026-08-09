@@ -8,7 +8,7 @@ FROM oven/bun:1-slim AS base
 
 FROM base AS pruner
 WORKDIR /app
-RUN --mount=type=cache,target=/root/.bun/install/cache \
+RUN --mount=type=cache,id=bun-global,target=/root/.bun/install/cache \
     bun add -g turbo
 COPY . .
 RUN turbo prune @repo/backend --docker
@@ -16,7 +16,7 @@ RUN turbo prune @repo/backend --docker
 FROM base AS builder
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
-RUN --mount=type=cache,target=/root/.bun/install/cache \
+RUN --mount=type=cache,id=bun-install,target=/root/.bun/install/cache \
     bun install --frozen-lockfile
 COPY --from=pruner /app/out/full/ .
 RUN cd packages/db-prisma && bunx prisma generate
