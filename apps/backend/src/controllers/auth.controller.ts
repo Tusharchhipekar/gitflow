@@ -4,6 +4,10 @@ import { SigninInputSchema, SignupInputSchema } from "@repo/types";
 import { generateAccessToken, generateRefreshToken } from "../utils/token";
 import { config } from "../config/config";
 import jwt from "jsonwebtoken";
+import {
+  ACCESS_COOKIE_OPTIONS,
+  REFRESH_COOKIE_OPTIONS,
+} from "../utils/cookie-options";
 
 export const signupController = async (req: Request, res: Response) => {
   try {
@@ -48,12 +52,7 @@ export const signupController = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(newUser.id.toString());
     const refreshToken = generateRefreshToken(newUser.id.toString());
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("refreshToken", refreshToken, REFRESH_COOKIE_OPTIONS);
 
     res.status(200).json({
       message: "user created successfully",
@@ -115,12 +114,7 @@ export const signinController = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(user.id.toString());
     const refreshToken = generateRefreshToken(user.id.toString());
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("refreshToken", refreshToken, REFRESH_COOKIE_OPTIONS);
 
     res.status(200).json({
       message: "signed in successfully",
@@ -180,16 +174,8 @@ export const refreshController = async (req: Request, res: Response) => {
 
 export const logoutController = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-    });
+    res.clearCookie("refreshToken", REFRESH_COOKIE_OPTIONS);
+    res.clearCookie("token", ACCESS_COOKIE_OPTIONS);
 
     res.status(200).json({ message: "logged out successfully", success: true });
   } catch (error) {

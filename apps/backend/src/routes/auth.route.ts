@@ -13,22 +13,12 @@ import passport from "passport";
 import prisma from "@repo/db-prisma";
 import { generateAccessToken, generateRefreshToken } from "../utils/token";
 import { config } from "../config/config";
+import {
+  ACCESS_COOKIE_OPTIONS,
+  REFRESH_COOKIE_OPTIONS,
+} from "../utils/cookie-options";
 
 const AuthRouter = Router();
-
-const ACCESS_COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: config.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  maxAge: 24 * 60 * 60 * 1000,
-};
-
-const REFRESH_COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: config.NODE_ENV === "production",
-  sameSite: "strict" as const,
-  maxAge: 30 * 24 * 60 * 60 * 1000,
-};
 
 AuthRouter.post("/signup", signupController);
 AuthRouter.post("/signin", signinController);
