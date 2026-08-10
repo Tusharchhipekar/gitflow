@@ -312,3 +312,4 @@ Skaffold builds both images, applies everything under `k8s/`, runs Prisma migrat
 - GitHub is called unauthenticated, which caps you at 60 requests/hour. Large repos are truncated at 2,000 files and 4,000 characters per file (the `Repo.truncated` flag records this).
 - Model calls are serialized behind a rate limiter with 429 backoff — indexing a large repo takes a while by design.
 - The one-job-per-user limit is in-process state, so it doesn't survive a restart and assumes a single backend replica.
+
